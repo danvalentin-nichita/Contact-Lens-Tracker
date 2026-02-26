@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Left Cap Gradients -->
+    <linearGradient id="leftCapGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F6FA" />
+    </linearGradient>
+    <linearGradient id="leftCapInnerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F2F7FB" />
+      <stop offset="100%" stop-color="#DFE7EF" />
+    </linearGradient>
+
+    <!-- Soft Drop Shadows -->
+    <filter id="shadowCap" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#002D52" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Left Cap -->
+  <circle cx="332" cy="512" r="175" fill="url(#leftCapGrad)" filter="url(#shadowCap)" />
+  <circle cx="332" cy="512" r="145" fill="url(#leftCapInnerGrad)" />
+</svg>
