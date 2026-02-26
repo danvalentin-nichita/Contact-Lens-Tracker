@@ -37,6 +37,36 @@
 			);
 			target = 370FF1702F4A167200C3B2C6 /* ContactLensTracker */;
 		};
+		37A3F4922F50D08F003A317E /* Exceptions for "icon_svg_layers" folder in "ContactLensTracker" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIcon_Base_Outline.svg,
+				AppIcon_Base.svg,
+				AppIcon_Clock_Outline.svg,
+				AppIcon_Clock.svg,
+				AppIcon_LeftCap_Outline.svg,
+				AppIcon_LeftCap.svg,
+				AppIcon_RightCap_Outline.svg,
+				AppIcon_RightCap.svg,
+				AppIcon.svg,
+			);
+			target = 370FF1702F4A167200C3B2C6 /* ContactLensTracker */;
+		};
+		37A3F4932F50D08F003A317E /* Exceptions for "icon_svg_layers" folder in "ContactLensTrackerUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIcon_Base_Outline.svg,
+				AppIcon_Base.svg,
+				AppIcon_Clock_Outline.svg,
+				AppIcon_Clock.svg,
+				AppIcon_LeftCap_Outline.svg,
+				AppIcon_LeftCap.svg,
+				AppIcon_RightCap_Outline.svg,
+				AppIcon_RightCap.svg,
+				AppIcon.svg,
+			);
+			target = 370FF18E2F4A167400C3B2C6 /* ContactLensTrackerUITests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -56,6 +86,15 @@
 		370FF1922F4A167400C3B2C6 /* ContactLensTrackerUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ContactLensTrackerUITests;
+			sourceTree = "<group>";
+		};
+		37A3F4882F50D08F003A317E /* icon_svg_layers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				37A3F4922F50D08F003A317E /* Exceptions for "icon_svg_layers" folder in "ContactLensTracker" target */,
+				37A3F4932F50D08F003A317E /* Exceptions for "icon_svg_layers" folder in "ContactLensTrackerUITests" target */,
+			);
+			path = icon_svg_layers;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -92,6 +131,7 @@
 				370FF1882F4A167400C3B2C6 /* ContactLensTrackerTests */,
 				370FF1922F4A167400C3B2C6 /* ContactLensTrackerUITests */,
 				370FF1722F4A167200C3B2C6 /* Products */,
+				37A3F4882F50D08F003A317E /* icon_svg_layers */,
 			);
 			sourceTree = "<group>";
 		};
@@ -168,6 +208,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				370FF1922F4A167400C3B2C6 /* ContactLensTrackerUITests */,
+				37A3F4882F50D08F003A317E /* icon_svg_layers */,
 			);
 			name = ContactLensTrackerUITests;
 			packageProductDependencies = (
@@ -285,8 +326,9 @@
 		370FF1992F4A167400C3B2C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = LensTracker;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = ContactLensTracker/ContactLensTracker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -295,11 +337,14 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ContactLensTracker/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Lens Tracker";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -321,8 +366,9 @@
 		370FF19A2F4A167400C3B2C6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = LensTracker;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = ContactLensTracker/ContactLensTracker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -331,11 +377,14 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ContactLensTracker/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Lens Tracker";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

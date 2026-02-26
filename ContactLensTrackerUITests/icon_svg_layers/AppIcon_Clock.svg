@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <!-- Basic Clock Icon -->
-  <g stroke="#FFFFFF" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Main circle -->
-    <circle cx="692" cy="512" r="120" stroke-width="20" />
-    <!-- Hands -->
-    <path d="M692 416 L692 512 L752 560" stroke-width="20" />
-  </g>
-</svg>

@@ -249,7 +249,7 @@ struct InventoryView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if isEditing {
-                        Button(role: .confirm, action: { saveChanges() }) {
+                        Button( action: { saveChanges() }) {
                             Image(systemName: "checkmark")
                         }
                     } else {
