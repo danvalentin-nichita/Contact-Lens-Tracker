@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="true" userDefinedModelVersionIdentifier="">
-    <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
+    <entity name="LensConfig" representedClassName="LensConfig" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="totalPairs" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="durationInDays" optional="YES" attributeType="Integer 16" defaultValueString="14" usesScalarValueType="YES"/>
+        <attribute name="currentPairStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="isAutoRenewEnabled" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="prescriptionLeft" optional="YES" attributeType="String"/>
+        <attribute name="prescriptionRight" optional="YES" attributeType="String"/>
+        <attribute name="lensType" optional="YES" attributeType="String"/>
+        <attribute name="nextCheckupDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="LensInventory" representedClassName="LensInventory" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lensType" optional="NO" attributeType="String"/>
+        <attribute name="pairsCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
+        <element name="LensConfig" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="LensInventory" positionX="100" positionY="-18" width="128" height="90"/>
     </elements>
 </model>

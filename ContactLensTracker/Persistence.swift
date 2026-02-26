@@ -14,10 +14,16 @@ struct PersistenceController {
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
+        let config = LensConfig(context: viewContext)
+        config.id = UUID()
+        config.totalPairs = 5
+        config.durationInDays = 14
+        config.currentPairStartDate = Date()
+        config.isAutoRenewEnabled = false
+        config.prescriptionLeft = "-2.00"
+        config.prescriptionRight = "-2.50"
+        config.lensType = "Daily"
+        config.nextCheckupDate = Calendar.current.date(byAdding: .month, value: 6, to: Date())
         do {
             try viewContext.save()
         } catch {
@@ -29,10 +35,10 @@ struct PersistenceController {
         return result
     }()
 
-    let container: NSPersistentCloudKitContainer
+    let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentCloudKitContainer(name: "ContactLensTracker")
+        container = NSPersistentContainer(name: "ContactLensTracker")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
