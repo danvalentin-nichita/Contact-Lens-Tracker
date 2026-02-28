@@ -57,7 +57,6 @@ struct HomeView: View {
                     ProgressView("Loading...")
                 }
             }
-            .navigationTitle("Lens Tracker")
             .alert("Replace Lenses Early?", isPresented: $showingReplaceWarning) {
                 Button("Cancel", role: .cancel) { }
                 Button("Replace", role: .destructive) {
@@ -92,38 +91,50 @@ struct HomeView: View {
     
     @ViewBuilder
     func progressCircle(daysLeft: Int, progress: Double) -> some View {
-        ZStack {
-            Circle()
-                .stroke(lineWidth: 20)
-                .opacity(0.3)
-                .foregroundColor(Color.blue)
+        GeometryReader { geometry in
+            let size = min(geometry.size.width, geometry.size.height)
+            let strokeWidth = size * 0.06
             
-            if #available(iOS 26.0, *) {
+            ZStack {
                 Circle()
-                    .trim(from: 0.0, to: CGFloat(min(max(progress, 0.0), 1.0)))
-                    .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
-                    .foregroundStyle(.linearGradient(colors: [.cyan, .blue, .purple.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .shadow(color: .cyan.opacity(0.6), radius: 10, x: 0, y: 5)
-                    .rotationEffect(Angle(degrees: 270.0))
-                    .animation(.linear, value: progress)
-            } else {
-                Circle()
-                    .trim(from: 0.0, to: CGFloat(min(max(progress, 0.0), 1.0)))
-                    .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
+                    .stroke(lineWidth: strokeWidth)
+                    .opacity(0.3)
                     .foregroundColor(Color.blue)
-                    .rotationEffect(Angle(degrees: 270.0))
-                    .animation(.linear, value: progress)
+                
+                if #available(iOS 26.0, *) {
+                    Circle()
+                        .trim(from: 0.0, to: CGFloat(min(max(progress, 0.0), 1.0)))
+                        .stroke(style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round, lineJoin: .round))
+                        .foregroundStyle(.linearGradient(colors: [.cyan, .blue, .purple.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .shadow(color: .cyan.opacity(0.6), radius: size * 0.03, x: 0, y: size * 0.015)
+                        .rotationEffect(Angle(degrees: 270.0))
+                        .animation(.linear, value: progress)
+                } else {
+                    Circle()
+                        .trim(from: 0.0, to: CGFloat(min(max(progress, 0.0), 1.0)))
+                        .stroke(style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round, lineJoin: .round))
+                        .foregroundColor(Color.blue)
+                        .rotationEffect(Angle(degrees: 270.0))
+                        .animation(.linear, value: progress)
+                }
+                
+                VStack(spacing: size * 0.02) {
+                    Text("\(daysLeft)")
+                        .font(.system(size: size * 0.25, weight: .bold))
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                    Text("Days Left")
+                        .font(.system(size: size * 0.08, weight: .medium))
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                        .foregroundColor(.secondary)
+                }
+                .padding(strokeWidth * 1.5)
             }
-            
-            VStack(spacing: 5) {
-                Text("\(daysLeft)")
-                    .font(.system(size: 80, weight: .bold))
-                Text("Days Left")
-                    .font(.title)
-                    .foregroundColor(.secondary)
-            }
+            .frame(width: size, height: size)
+            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
         }
-        .frame(maxWidth: .infinity, maxHeight: 350)
+        .aspectRatio(1.0, contentMode: .fit)
         .padding()
     }
     
