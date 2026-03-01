@@ -36,9 +36,14 @@ struct InventoryView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if isEditing {
-                        Button( action: { saveChanges() }) {
-                            Image(systemName: "checkmark")
-                        }
+                        if #available(iOS 26, *) {
+                            Button(role: .confirm, action: {saveChanges()}) {
+                                Image(systemName: "checkmark")
+                            }
+                        } else {
+                            Button( action: { saveChanges() }) {
+                                Image(systemName: "checkmark")
+                            }}
                     } else {
                         Button(action: { showingAddSheet = true }) {
                             Image(systemName: "plus")
@@ -186,10 +191,29 @@ struct AddInventoryView: View {
             }
             .navigationTitle("Add Inventory")
             .navigationBarItems(
-                leading: Button("Cancel") { dismiss() },
-                trailing: Button("Save") {
-                    saveInventory()
-                    dismiss()
+                leading: Group {
+                    if #available(iOS 26.0, *) {
+                        Button(action: { dismiss() }) {
+                            Image(systemName: "xmark")
+                        }
+                    } else {
+                        Button("Cancel") { dismiss() }
+                    }
+                },
+                trailing: Group {
+                    if #available(iOS 26.0, *) {
+                        Button(role:.confirm, action: {
+                            saveInventory()
+                            dismiss()
+                        }) {
+                            Image(systemName: "checkmark")
+                        }
+                    } else {
+                        Button("Save") {
+                            saveInventory()
+                            dismiss()
+                        }
+                    }
                 }
             )
         }

@@ -5,8 +5,6 @@ struct SettingsView: View {
     @EnvironmentObject var lensManager: LensManager
     
     @State private var isAutoRenewEnabled: Bool = false
-    @State private var prescriptionLeft: String = ""
-    @State private var prescriptionRight: String = ""
     @State private var nextCheckupDate: Date = Date()
     @State private var showingAutoRenewWarning = false
     @State private var showingNukeWarning = false
@@ -14,23 +12,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Prescription & Health")) {
-                    HStack {
-                        Text("Left Eye (OS)")
-                        Spacer()
-                        TextField("-2.00", text: $prescriptionLeft)
-                            .multilineTextAlignment(.trailing)
-                            .keyboardType(.numbersAndPunctuation)
-                            .onChange(of: prescriptionLeft) { _ in saveSettings() }
-                    }
-                    HStack {
-                        Text("Right Eye (OD)")
-                        Spacer()
-                        TextField("-2.00", text: $prescriptionRight)
-                            .multilineTextAlignment(.trailing)
-                            .keyboardType(.numbersAndPunctuation)
-                            .onChange(of: prescriptionRight) { _ in saveSettings() }
-                    }
+                Section(header: Text("Health")) {
                     DatePicker("Next Checkup", selection: $nextCheckupDate, displayedComponents: .date)
                         .onChange(of: nextCheckupDate) { _ in saveSettings() }
                 }
@@ -89,8 +71,6 @@ struct SettingsView: View {
     private func loadSettings() {
         if let config = lensManager.config {
             isAutoRenewEnabled = config.isAutoRenewEnabled
-            prescriptionLeft = config.prescriptionLeft ?? ""
-            prescriptionRight = config.prescriptionRight ?? ""
             nextCheckupDate = config.nextCheckupDate ?? Date()
             showingAutoRenewWarning = isAutoRenewEnabled
         }
@@ -99,8 +79,6 @@ struct SettingsView: View {
     private func saveSettings() {
         if let config = lensManager.config {
             config.isAutoRenewEnabled = isAutoRenewEnabled
-            config.prescriptionLeft = prescriptionLeft
-            config.prescriptionRight = prescriptionRight
             config.nextCheckupDate = nextCheckupDate
             lensManager.save()
         }

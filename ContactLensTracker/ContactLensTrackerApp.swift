@@ -140,6 +140,52 @@ class LensManager: ObservableObject {
         return inventory.reduce(0) { $0 + Int($1.pairsCount) }
     }
     
+    // MARK: - Prescription Helpers
+    
+    func getPrescriptionLeft() -> EyePrescription {
+        guard let stringVal = config?.prescriptionLeft, !stringVal.isEmpty else {
+            return EyePrescription()
+        }
+        if let data = stringVal.data(using: .utf8),
+           let rx = try? JSONDecoder().decode(EyePrescription.self, from: data) {
+            return rx
+        }
+        // Fallback for old simple string prescription
+        var rx = EyePrescription()
+        rx.sph = stringVal
+        return rx
+    }
+    
+    func getPrescriptionRight() -> EyePrescription {
+        guard let stringVal = config?.prescriptionRight, !stringVal.isEmpty else {
+            return EyePrescription()
+        }
+        if let data = stringVal.data(using: .utf8),
+           let rx = try? JSONDecoder().decode(EyePrescription.self, from: data) {
+            return rx
+        }
+        // Fallback for old simple string prescription
+        var rx = EyePrescription()
+        rx.sph = stringVal
+        return rx
+    }
+    
+    func savePrescriptions(left: EyePrescription, right: EyePrescription) {
+        let encoder = JSONEncoder()
+        
+        if let leftData = try? encoder.encode(left),
+           let leftJson = String(data: leftData, encoding: .utf8) {
+            config?.prescriptionLeft = leftJson
+        }
+        
+        if let rightData = try? encoder.encode(right),
+           let rightJson = String(data: rightData, encoding: .utf8) {
+            config?.prescriptionRight = rightJson
+        }
+        
+        save()
+    }
+    
     func save() {
         objectWillChange.send()
         do {

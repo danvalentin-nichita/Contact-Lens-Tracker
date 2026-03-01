@@ -6,6 +6,7 @@ struct HomeView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @State private var showingReplaceWarning = false
     @State private var showingInventoryChooser = false
+    @State private var showingPrescription = false
     
     var body: some View {
         NavigationView {
@@ -74,6 +75,17 @@ struct HomeView: View {
                 }
                 Button("Cancel", role: .cancel) {}
             }
+            .sheet(isPresented: $showingPrescription) {
+                PrescriptionView()
+            }
+            .navigationBarItems(trailing: Button(action: {
+                showingPrescription = true
+            }) {
+                HStack(spacing: 4) {
+                    Image(systemName: "eyeglasses")
+                    Text("Prescription")
+                }
+            })
         }
         .navigationViewStyle(.stack)
     }
@@ -166,13 +178,7 @@ struct HomeView: View {
     
     @ViewBuilder
     func infoDashboard(config: LensConfig) -> some View {
-        HStack(spacing: 40) {
-            VStack(alignment: .leading, spacing: 5) {
-                Text("Prescription").font(.caption).foregroundColor(.secondary)
-                Text("L: \(config.prescriptionLeft ?? "-")   R: \(config.prescriptionRight ?? "-")")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-            }
+        HStack(spacing: 30) {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Next Checkup").font(.caption).foregroundColor(.secondary)
                 if let pd = config.nextCheckupDate {
