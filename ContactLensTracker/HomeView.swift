@@ -7,29 +7,38 @@ struct HomeView: View {
     @State private var showingReplaceWarning = false
     @State private var showingInventoryChooser = false
     @State private var showingPrescription = false
+    @State private var showingAddSheet = false
     
     var body: some View {
         NavigationView {
             Group {
                 if let config = lensManager.config {
+                    let totalPairs = lensManager.totalInventoryCount()
+                    let isActive = config.currentPairStartDate != nil
+                    
+                    let startDateForCalc = config.currentPairStartDate ?? Date()
                     let calendar = Calendar.current
-                    let startOfCurrent = calendar.startOfDay(for: config.currentPairStartDate ?? Date())
+                    let startOfCurrent = calendar.startOfDay(for: startDateForCalc)
                     let startOfToday = calendar.startOfDay(for: Date())
                     let daysElapsed = calendar.dateComponents([.day], from: startOfCurrent, to: startOfToday).day ?? 0
-                    let daysLeft = max(0, Int(config.durationInDays) - daysElapsed)
-                    let progress = 1.0 - (Double(daysElapsed) / Double(config.durationInDays))
-                    let totalPairs = lensManager.totalInventoryCount()
+                    
+                    let daysLeft = isActive ? max(0, Int(config.durationInDays) - daysElapsed) : 0
+                    let progress = isActive ? (1.0 - (Double(daysElapsed) / Double(config.durationInDays))) : 0.0
                     
                     if verticalSizeClass == .compact {
                         // Landscape
                         HStack(spacing: 40) {
-                            progressCircle(daysLeft: daysLeft, progress: progress)
+                            if isActive {
+                                progressCircle(daysLeft: daysLeft, progress: progress)
+                            } else {
+                                inactiveCircle()
+                            }
                             
                             VStack(spacing: 20) {
                                 Text("\(totalPairs) Pairs Remaining")
                                     .font(.headline)
                                 
-                                replaceButton(daysLeft: daysLeft, hasPairs: totalPairs > 0)
+                                replaceButton(isActive: isActive, daysLeft: daysLeft, hasPairs: totalPairs > 0)
                                 
                                 infoDashboard(config: config)
                             }
@@ -39,12 +48,16 @@ struct HomeView: View {
                     } else {
                         // Portrait
                         VStack(spacing: 30) {
-                            progressCircle(daysLeft: daysLeft, progress: progress)
+                            if isActive {
+                                progressCircle(daysLeft: daysLeft, progress: progress)
+                            } else {
+                                inactiveCircle()
+                            }
                             
                             Text("\(totalPairs) Pairs Remaining")
                                 .font(.headline)
                             
-                            replaceButton(daysLeft: daysLeft, hasPairs: totalPairs > 0)
+                            replaceButton(isActive: isActive, daysLeft: daysLeft, hasPairs: totalPairs > 0)
                             
                             Divider().padding(.vertical)
                             
@@ -77,6 +90,10 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingPrescription) {
                 PrescriptionView()
+            }
+            .sheet(isPresented: $showingAddSheet) {
+                AddInventoryView()
+                    .environmentObject(lensManager)
             }
             .navigationBarItems(trailing: Button(action: {
                 showingPrescription = true
@@ -151,16 +168,16 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func replaceButton(daysLeft: Int, hasPairs: Bool) -> some View {
+    func replaceButton(isActive: Bool, daysLeft: Int, hasPairs: Bool) -> some View {
         if hasPairs {
             Button(action: {
-                if daysLeft > 0 {
+                if isActive && daysLeft > 0 {
                     showingReplaceWarning = true
                 } else {
                     handleReplace()
                 }
             }) {
-                Text("Replace Lenses")
+                Text(isActive ? "Replace Lenses" : "Start Lenses")
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()
@@ -170,10 +187,47 @@ struct HomeView: View {
             }
             .padding(.horizontal, 40)
         } else {
-            Text("No pairs left. Add more!")
-                .font(.headline)
-                .foregroundColor(.red)
+            Button(action: {
+                showingAddSheet = true
+            }) {
+                Text("Add Contact Lenses")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
+            .padding(.horizontal, 40)
         }
+    }
+    
+    @ViewBuilder
+    func inactiveCircle() -> some View {
+        GeometryReader { geometry in
+            let size = min(geometry.size.width, geometry.size.height)
+            let strokeWidth = size * 0.06
+            
+            ZStack {
+                Circle()
+                    .stroke(lineWidth: strokeWidth)
+                    .opacity(0.3)
+                    .foregroundColor(Color.gray)
+                
+                VStack(spacing: size * 0.02) {
+                    Text("No Active\nLenses")
+                        .font(.system(size: size * 0.15, weight: .bold))
+                        .minimumScaleFactor(0.5)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                }
+                .padding(strokeWidth * 1.5)
+            }
+            .frame(width: size, height: size)
+            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+        }
+        .aspectRatio(1.0, contentMode: .fit)
+        .padding()
     }
     
     @ViewBuilder

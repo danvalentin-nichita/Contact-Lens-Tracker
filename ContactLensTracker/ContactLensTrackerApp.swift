@@ -45,7 +45,7 @@ class LensManager: ObservableObject {
                 initialConfig.id = UUID()
                 initialConfig.totalPairs = 0
                 initialConfig.durationInDays = 14
-                initialConfig.currentPairStartDate = Date()
+                initialConfig.currentPairStartDate = nil
                 initialConfig.isAutoRenewEnabled = false
                 initialConfig.prescriptionLeft = ""
                 initialConfig.prescriptionRight = ""
