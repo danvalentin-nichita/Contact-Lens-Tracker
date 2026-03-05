@@ -123,6 +123,8 @@ struct HomeView: View {
         GeometryReader { geometry in
             let size = min(geometry.size.width, geometry.size.height)
             let strokeWidth = size * 0.06
+            let themeStr = lensManager.config?.theme ?? "Default Blue"
+            let theme = AppTheme(rawValue: themeStr) ?? .defaultBlue
             
             ZStack {
                 Circle()
@@ -134,15 +136,15 @@ struct HomeView: View {
                     Circle()
                         .trim(from: 0.0, to: CGFloat(min(max(progress, 0.0), 1.0)))
                         .stroke(style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round, lineJoin: .round))
-                        .foregroundStyle(.linearGradient(colors: [.cyan, .blue, .purple.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .shadow(color: .cyan.opacity(0.6), radius: size * 0.03, x: 0, y: size * 0.015)
+                        .foregroundStyle(theme.gradient)
+                        .shadow(color: theme.shadowColor, radius: size * 0.03, x: 0, y: size * 0.015)
                         .rotationEffect(Angle(degrees: 270.0))
                         .animation(.linear, value: progress)
                 } else {
                     Circle()
                         .trim(from: 0.0, to: CGFloat(min(max(progress, 0.0), 1.0)))
                         .stroke(style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round, lineJoin: .round))
-                        .foregroundColor(Color.blue)
+                        .foregroundStyle(theme.gradient)
                         .rotationEffect(Angle(degrees: 270.0))
                         .animation(.linear, value: progress)
                 }

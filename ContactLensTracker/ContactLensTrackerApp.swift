@@ -50,6 +50,7 @@ class LensManager: ObservableObject {
                 initialConfig.prescriptionLeft = ""
                 initialConfig.prescriptionRight = ""
                 initialConfig.lensType = ""
+                initialConfig.theme = AppTheme.defaultBlue.rawValue
                 initialConfig.nextCheckupDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
                 try viewContext.save()
                 self.config = initialConfig

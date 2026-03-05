@@ -6,6 +6,7 @@ struct SettingsView: View {
     
     @State private var isAutoRenewEnabled: Bool = false
     @State private var nextCheckupDate: Date = Date()
+    @State private var selectedTheme: AppTheme = .defaultBlue
     @State private var showingAutoRenewWarning = false
     @State private var showingNukeWarning = false
     
@@ -31,6 +32,47 @@ struct SettingsView: View {
                                 saveSettings()
                             }
                     }
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Theme")
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                            .padding(.top, 8)
+                            .padding(.horizontal, 20)
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 20) {
+                                ForEach(AppTheme.allCases, id: \.self) { theme in
+                                    VStack(spacing: 8) {
+                                        Circle()
+                                            .fill(theme.gradient)
+                                            .frame(width: 44, height: 44)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(selectedTheme == theme ? Color.blue : Color.clear, lineWidth: 3)
+                                                    .padding(-4)
+                                            )
+                                        
+                                        Text(theme.rawValue)
+                                            .font(.caption2)
+                                            .foregroundColor(selectedTheme == theme ? .primary : .secondary)
+                                            .lineLimit(1)
+                                    }
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        withAnimation(.easeInOut(duration: 0.2)) {
+                                            selectedTheme = theme
+                                            saveSettings()
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 20)
+                        }
+                    }
+                    .padding(.bottom, 8)
+                    .listRowInsets(EdgeInsets())
                 }
                 
                 Section {
@@ -72,6 +114,9 @@ struct SettingsView: View {
         if let config = lensManager.config {
             isAutoRenewEnabled = config.isAutoRenewEnabled
             nextCheckupDate = config.nextCheckupDate ?? Date()
+            if let themeStr = config.theme, let theme = AppTheme(rawValue: themeStr) {
+                selectedTheme = theme
+            }
             showingAutoRenewWarning = isAutoRenewEnabled
         }
     }
@@ -80,6 +125,7 @@ struct SettingsView: View {
         if let config = lensManager.config {
             config.isAutoRenewEnabled = isAutoRenewEnabled
             config.nextCheckupDate = nextCheckupDate
+            config.theme = selectedTheme.rawValue
             lensManager.save()
         }
     }

@@ -10,6 +10,7 @@
         <attribute name="prescriptionRight" optional="YES" attributeType="String"/>
         <attribute name="lensType" optional="YES" attributeType="String"/>
         <attribute name="nextCheckupDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="theme" optional="YES" attributeType="String" defaultValueString="Default Blue"/>
     </entity>
     <entity name="LensInventory" representedClassName="LensInventory" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
