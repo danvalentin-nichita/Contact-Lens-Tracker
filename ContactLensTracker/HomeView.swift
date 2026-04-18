@@ -25,47 +25,47 @@ struct HomeView: View {
                     let daysLeft = isActive ? max(0, Int(config.durationInDays) - daysElapsed) : 0
                     let progress = isActive ? (1.0 - (Double(daysElapsed) / Double(config.durationInDays))) : 0.0
                     
-                    if verticalSizeClass == .compact {
-                        // Landscape
-                        HStack(spacing: 40) {
-                            if isActive {
-                                progressCircle(daysLeft: daysLeft, progress: progress)
-                            } else {
-                                inactiveCircle()
+                    ScrollView {
+                        if verticalSizeClass == .compact {
+                            // Landscape
+                            HStack(spacing: 40) {
+                                if isActive {
+                                    progressCircle(daysLeft: daysLeft, progress: progress)
+                                } else {
+                                    inactiveCircle()
+                                }
+                                
+                                VStack(spacing: 20) {
+                                    Text("\(totalPairs) Pairs Remaining")
+                                        .font(.headline)
+                                    
+                                    replaceButton(isActive: isActive, daysLeft: daysLeft, hasPairs: totalPairs > 0)
+                                    
+                                    accessoriesDashboard()
+                                }
+                                .frame(maxWidth: .infinity)
                             }
-                            
-                            VStack(spacing: 20) {
+                            .padding()
+                        } else {
+                            // Portrait
+                            VStack(spacing: 30) {
+                                if isActive {
+                                    progressCircle(daysLeft: daysLeft, progress: progress)
+                                } else {
+                                    inactiveCircle()
+                                }
+                                
                                 Text("\(totalPairs) Pairs Remaining")
                                     .font(.headline)
                                 
                                 replaceButton(isActive: isActive, daysLeft: daysLeft, hasPairs: totalPairs > 0)
                                 
-                                infoDashboard(config: config)
+                                accessoriesDashboard()
+                                
+                                Spacer()
                             }
-                            .frame(maxWidth: .infinity)
+                            .padding()
                         }
-                        .padding()
-                    } else {
-                        // Portrait
-                        VStack(spacing: 30) {
-                            if isActive {
-                                progressCircle(daysLeft: daysLeft, progress: progress)
-                            } else {
-                                inactiveCircle()
-                            }
-                            
-                            Text("\(totalPairs) Pairs Remaining")
-                                .font(.headline)
-                            
-                            replaceButton(isActive: isActive, daysLeft: daysLeft, hasPairs: totalPairs > 0)
-                            
-                            Divider().padding(.vertical)
-                            
-                            infoDashboard(config: config)
-                            
-                            Spacer()
-                        }
-                        .padding()
                     }
                 } else {
                     ProgressView("Loading...")
@@ -233,29 +233,96 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func infoDashboard(config: LensConfig) -> some View {
-        HStack(spacing: 30) {
-            VStack(alignment: .leading, spacing: 5) {
-                Text("Next Checkup").font(.caption).foregroundColor(.secondary)
-                if let pd = config.nextCheckupDate {
-                    Text(pd, style: .date)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                } else {
-                    Text("Not Set")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                }
+    func accessoriesDashboard() -> some View {
+        VStack(spacing: 12) {
+            AccessoryCard(type: .eyeDrops)
+            AccessoryCard(type: .cleaner)
+            AccessoryCard(type: .lensCase)
+        }
+        .padding(.top, 10)
+    }
+}
+
+struct AccessoryCard: View {
+    @EnvironmentObject var lensManager: LensManager
+    let type: LensManager.AccessoryType
+    
+    var iconName: String {
+        switch type {
+        case .eyeDrops: return "drop.fill"
+        case .cleaner: return "sparkles"
+        case .lensCase: return "shippingbox.fill"
+        }
+    }
+    
+    var body: some View {
+        let status = lensManager.getAccessoryStatus(for: type)
+        let inventoryCount = lensManager.getAccessoryCount(for: type)
+        
+        HStack {
+            Image(systemName: iconName)
+                .font(.title2)
+                .foregroundColor(.blue)
+                .frame(width: 30)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(type.rawValue)
+                    .font(.headline)
+                Text("\(inventoryCount) in inventory")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            // Only show type if there is exactly 1 type in inventory
-            if lensManager.inventory.count == 1, let type = lensManager.inventory.first?.lensType, !type.isEmpty {
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("Type").font(.caption).foregroundColor(.secondary)
-                    Text(type)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
+            
+            Spacer()
+            
+            if status.duration > 0 {
+                if status.isActive {
+                    HStack(spacing: 10) {
+                        Text("\(status.daysLeft) days left")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        smallProgressCircle(progress: status.progress)
+                    }
+                } else {
+                    Button("Start") {
+                        lensManager.startAccessory(type)
+                    }
+                    .font(.subheadline)
+                    .buttonStyle(.bordered)
                 }
+            } else {
+                Text("Not Set")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
         }
+        .padding()
+        .background(Color(UIColor.secondarySystemBackground))
+        .cornerRadius(12)
+        .padding(.horizontal)
+    }
+    
+    @ViewBuilder
+    func smallProgressCircle(progress: Double) -> some View {
+        let size: CGFloat = 24
+        let strokeWidth: CGFloat = 3
+        let themeStr = lensManager.config?.theme ?? "Default Blue"
+        let theme = AppTheme(rawValue: themeStr) ?? .defaultBlue
+        
+        ZStack {
+            Circle()
+                .stroke(lineWidth: strokeWidth)
+                .opacity(0.3)
+                .foregroundColor(.gray)
+            
+            Circle()
+                .trim(from: 0.0, to: CGFloat(min(max(progress, 0.0), 1.0)))
+                .stroke(style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round, lineJoin: .round))
+                .foregroundStyle(theme.gradient)
+                .rotationEffect(Angle(degrees: 270.0))
+                .animation(.linear, value: progress)
+        }
+        .frame(width: size, height: size)
     }
 }

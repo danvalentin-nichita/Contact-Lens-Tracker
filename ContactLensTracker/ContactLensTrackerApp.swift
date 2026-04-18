@@ -52,6 +52,15 @@ class LensManager: ObservableObject {
                 initialConfig.lensType = ""
                 initialConfig.theme = AppTheme.defaultBlue.rawValue
                 initialConfig.nextCheckupDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
+                initialConfig.eyeDropsDuration = 90
+                initialConfig.cleanerDuration = 90
+                initialConfig.caseDuration = 90
+                initialConfig.eyeDropsStartDate = nil
+                initialConfig.cleanerStartDate = nil
+                initialConfig.caseStartDate = nil
+                initialConfig.eyeDropsCount = 0
+                initialConfig.cleanerCount = 0
+                initialConfig.caseCount = 0
                 try viewContext.save()
                 self.config = initialConfig
             }
@@ -139,6 +148,82 @@ class LensManager: ObservableObject {
     
     func totalInventoryCount() -> Int {
         return inventory.reduce(0) { $0 + Int($1.pairsCount) }
+    }
+    
+    // MARK: - Accessories Helpers
+    
+    enum AccessoryType: String {
+        case eyeDrops = "Eye Drops"
+        case cleaner = "Lens Cleaner"
+        case lensCase = "Lens Case"
+    }
+    
+    func startAccessory(_ type: AccessoryType) {
+        guard let config = config else { return }
+        switch type {
+        case .eyeDrops:
+            config.eyeDropsStartDate = Date()
+            if config.eyeDropsCount > 0 { config.eyeDropsCount -= 1 }
+        case .cleaner:
+            config.cleanerStartDate = Date()
+            if config.cleanerCount > 0 { config.cleanerCount -= 1 }
+        case .lensCase:
+            config.caseStartDate = Date()
+            if config.caseCount > 0 { config.caseCount -= 1 }
+        }
+        save()
+    }
+    
+    func getAccessoryStatus(for type: AccessoryType) -> (daysLeft: Int, progress: Double, isActive: Bool, duration: Int) {
+        guard let config = config else { return (0, 0.0, false, 0) }
+        
+        let startDate: Date?
+        let duration: Int
+        
+        switch type {
+        case .eyeDrops:
+            startDate = config.eyeDropsStartDate
+            duration = Int(config.eyeDropsDuration)
+        case .cleaner:
+            startDate = config.cleanerStartDate
+            duration = Int(config.cleanerDuration)
+        case .lensCase:
+            startDate = config.caseStartDate
+            duration = Int(config.caseDuration)
+        }
+        
+        guard let start = startDate, duration > 0 else {
+            return (0, 0.0, false, duration)
+        }
+        
+        let calendar = Calendar.current
+        let startOfCurrent = calendar.startOfDay(for: start)
+        let startOfToday = calendar.startOfDay(for: Date())
+        let daysElapsed = calendar.dateComponents([.day], from: startOfCurrent, to: startOfToday).day ?? 0
+        
+        let daysLeft = max(0, duration - daysElapsed)
+        let progress = 1.0 - (Double(daysElapsed) / Double(duration))
+        
+        return (daysLeft, progress, true, duration)
+    }
+    
+    func getAccessoryCount(for type: AccessoryType) -> Int {
+        guard let config = config else { return 0 }
+        switch type {
+        case .eyeDrops: return Int(config.eyeDropsCount)
+        case .cleaner: return Int(config.cleanerCount)
+        case .lensCase: return Int(config.caseCount)
+        }
+    }
+    
+    func addAccessory(_ type: AccessoryType, count: Int) {
+        guard let config = config else { return }
+        switch type {
+        case .eyeDrops: config.eyeDropsCount += Int16(count)
+        case .cleaner: config.cleanerCount += Int16(count)
+        case .lensCase: config.caseCount += Int16(count)
+        }
+        save()
     }
     
     // MARK: - Prescription Helpers
