@@ -6,18 +6,29 @@ struct InventoryView: View {
     @State private var showingAddSheet = false
     @State private var isEditing = false
     @State private var localEdits: [UUID: Int16] = [:]
+    @State private var localAccessoryEdits: [LensManager.AccessoryType: Int16] = [:]
 
     var body: some View {
         NavigationView {
             List {
-                if lensManager.inventory.isEmpty {
-                    Text("No inventory tracked yet.")
-                        .foregroundColor(.secondary)
-                } else {
-                    ForEach(lensManager.inventory, id: \.id) { item in
-                        InventoryRow(item: item, isEditing: isEditing, localEdits: $localEdits)
+                Section(header: Text("Lenses")) {
+                    if lensManager.inventory.isEmpty {
+                        Text("No inventory tracked yet.")
+                            .foregroundColor(.secondary)
+                    } else {
+                        ForEach(lensManager.inventory, id: \.id) { item in
+                            InventoryRow(item: item, isEditing: isEditing, localEdits: $localEdits)
+                        }
+                        .onDelete(perform: deleteInventory)
                     }
-                    .onDelete(perform: deleteInventory)
+                }
+                
+                Section(header: Text("Accessories")) {
+                    if let config = lensManager.config {
+                        AccessoryRow(type: .eyeDrops, count: config.eyeDropsCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
+                        AccessoryRow(type: .cleaner, count: config.cleanerCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
+                        AccessoryRow(type: .lensCase, count: config.caseCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
+                    }
                 }
             }
             .navigationTitle("Inventory")
@@ -67,6 +78,14 @@ struct InventoryView: View {
                 localEdits[id] = item.pairsCount
             }
         }
+        
+        localAccessoryEdits.removeAll()
+        if let config = lensManager.config {
+            localAccessoryEdits[.eyeDrops] = config.eyeDropsCount
+            localAccessoryEdits[.cleaner] = config.cleanerCount
+            localAccessoryEdits[.lensCase] = config.caseCount
+        }
+
         // Force state update synchronously
         withAnimation {
             isEditing = true
@@ -75,6 +94,7 @@ struct InventoryView: View {
 
     private func cancelEditing() {
         localEdits.removeAll()
+        localAccessoryEdits.removeAll()
         withAnimation {
             isEditing = false
         }
@@ -90,6 +110,11 @@ struct InventoryView: View {
                         item.pairsCount = newCount
                     }
                 }
+            }
+            if let config = lensManager.config {
+                if let v = localAccessoryEdits[.eyeDrops] { config.eyeDropsCount = v }
+                if let v = localAccessoryEdits[.cleaner] { config.cleanerCount = v }
+                if let v = localAccessoryEdits[.lensCase] { config.caseCount = v }
             }
             lensManager.save()
         }
@@ -163,30 +188,46 @@ struct AddInventoryView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var lensManager: LensManager
     
-    @State private var pairsToAdd: Int = 1
-    @State private var customType: String = ""
+    let itemTypes = ["Contact Lenses", "Eye Drops", "Contact Case", "Lens Cleaner"]
+    @State private var selectedItemType: String = "Contact Lenses"
     
-    let typeOptions = ["Daily", "Bi-Weekly", "Monthly", "Custom"]
-    @State private var selectedType: String = "Monthly"
+    @State private var amountToAdd: Int = 1
+    
+    @State private var customType: String = ""
+    let lensTypeOptions = ["Daily", "Bi-Weekly", "Monthly", "Custom"]
+    @State private var selectedLensType: String = "Monthly"
     
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Add Pairs")) {
-                    Stepper("\(pairsToAdd) Pair(s)", value: $pairsToAdd, in: 1...100)
-                }
-                
-                Section(header: Text("Lens Type")) {
-                    Picker("Type", selection: $selectedType) {
-                        ForEach(typeOptions, id: \.self) {
+                Section(header: Text("Item Info")) {
+                    Picker("What to Add", selection: $selectedItemType) {
+                        ForEach(itemTypes, id: \.self) {
                             Text($0)
                         }
                     }
-                    .pickerStyle(SegmentedPickerStyle())
                     
-                    if selectedType == "Custom" {
-                        TextField("Enter lens type", text: $customType)
+                    if selectedItemType == "Contact Lenses" {
+                        Picker("Lens Type", selection: $selectedLensType) {
+                            ForEach(lensTypeOptions, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        
+                        if selectedLensType == "Custom" {
+                            TextField("Enter lens type", text: $customType)
+                        }
                     }
+                }
+                
+                Section(header: Text("Quantity")) {
+                    Picker("Quantity", selection: $amountToAdd) {
+                        ForEach(1...100, id: \.self) { num in
+                            Text("\(num)").tag(num)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(height: 120)
                 }
             }
             .navigationTitle("Add Inventory")
@@ -220,17 +261,76 @@ struct AddInventoryView: View {
     }
     
     private func saveInventory() {
-        let finalType = selectedType == "Custom" ? customType : selectedType
-        if finalType.isEmpty { return }
-        
-        if let existing = lensManager.inventory.first(where: { $0.lensType == finalType }) {
-            existing.pairsCount += Int16(pairsToAdd)
-        } else if let context = lensManager.config?.managedObjectContext {
-            let newItem = LensInventory(context: context)
-            newItem.id = UUID()
-            newItem.lensType = finalType
-            newItem.pairsCount = Int16(pairsToAdd)
+        if selectedItemType == "Contact Lenses" {
+            let finalType = selectedLensType == "Custom" ? customType : selectedLensType
+            if finalType.isEmpty { return }
+            
+            if let existing = lensManager.inventory.first(where: { $0.lensType == finalType }) {
+                existing.pairsCount += Int16(amountToAdd)
+            } else if let context = lensManager.config?.managedObjectContext {
+                let newItem = LensInventory(context: context)
+                newItem.id = UUID()
+                newItem.lensType = finalType
+                newItem.pairsCount = Int16(amountToAdd)
+            }
+        } else {
+            // Accessories
+            if selectedItemType == "Eye Drops" {
+                lensManager.addAccessory(.eyeDrops, count: amountToAdd)
+            } else if selectedItemType == "Lens Cleaner" {
+                lensManager.addAccessory(.cleaner, count: amountToAdd)
+            } else if selectedItemType == "Contact Case" {
+                lensManager.addAccessory(.lensCase, count: amountToAdd)
+            }
         }
         lensManager.save()
+    }
+}
+
+struct AccessoryRow: View {
+    let type: LensManager.AccessoryType
+    let count: Int16
+    var isEditing: Bool
+    @Binding var localAccessoryEdits: [LensManager.AccessoryType: Int16]
+
+    var body: some View {
+        HStack {
+            Text(type.rawValue)
+            Spacer()
+            if isEditing {
+                HStack(spacing: 12) {
+                    Button(action: {
+                        let current = localAccessoryEdits[type] ?? count
+                        if current > 0 {
+                            localAccessoryEdits[type] = current - 1
+                        }
+                    }) {
+                        Image(systemName: "minus.circle.fill")
+                            .foregroundColor(.gray)
+                            .font(.title3)
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Text("\(localAccessoryEdits[type] ?? count)")
+                        .fontWeight(.bold)
+                        .frame(minWidth: 30, alignment: .center)
+                    
+                    Button(action: {
+                        let current = localAccessoryEdits[type] ?? count
+                        if current < 999 {
+                            localAccessoryEdits[type] = current + 1
+                        }
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundColor(.blue)
+                            .font(.title3)
+                    }
+                    .buttonStyle(.plain)
+                }
+            } else {
+                Text("\(count) Item(s)")
+                    .fontWeight(.bold)
+            }
+        }
     }
 }

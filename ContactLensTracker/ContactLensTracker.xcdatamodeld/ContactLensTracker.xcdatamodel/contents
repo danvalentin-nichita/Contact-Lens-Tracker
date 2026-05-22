@@ -10,6 +10,16 @@
         <attribute name="prescriptionRight" optional="YES" attributeType="String"/>
         <attribute name="lensType" optional="YES" attributeType="String"/>
         <attribute name="nextCheckupDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="theme" optional="YES" attributeType="String" defaultValueString="Default Blue"/>
+        <attribute name="eyeDropsStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="eyeDropsDuration" optional="YES" attributeType="Integer 16" defaultValueString="90" usesScalarValueType="YES"/>
+        <attribute name="eyeDropsCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="cleanerStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="cleanerDuration" optional="YES" attributeType="Integer 16" defaultValueString="90" usesScalarValueType="YES"/>
+        <attribute name="cleanerCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="caseStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="caseDuration" optional="YES" attributeType="Integer 16" defaultValueString="90" usesScalarValueType="YES"/>
+        <attribute name="caseCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="LensInventory" representedClassName="LensInventory" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>

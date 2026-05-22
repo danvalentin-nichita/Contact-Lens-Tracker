@@ -2,6 +2,7 @@ import SwiftUI
 import CoreData
 import UserNotifications
 import Combine
+import WidgetKit
 
 @main
 struct ContactLensTrackerApp: App {
@@ -50,7 +51,17 @@ class LensManager: ObservableObject {
                 initialConfig.prescriptionLeft = ""
                 initialConfig.prescriptionRight = ""
                 initialConfig.lensType = ""
+                initialConfig.theme = AppTheme.defaultBlue.rawValue
                 initialConfig.nextCheckupDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
+                initialConfig.eyeDropsDuration = 90
+                initialConfig.cleanerDuration = 90
+                initialConfig.caseDuration = 90
+                initialConfig.eyeDropsStartDate = nil
+                initialConfig.cleanerStartDate = nil
+                initialConfig.caseStartDate = nil
+                initialConfig.eyeDropsCount = 0
+                initialConfig.cleanerCount = 0
+                initialConfig.caseCount = 0
                 try viewContext.save()
                 self.config = initialConfig
             }
@@ -140,6 +151,89 @@ class LensManager: ObservableObject {
         return inventory.reduce(0) { $0 + Int($1.pairsCount) }
     }
     
+    // MARK: - Accessories Helpers
+    
+    enum AccessoryType: String {
+        case eyeDrops = "Eye Drops"
+        case cleaner = "Lens Cleaner"
+        case lensCase = "Lens Case"
+    }
+    
+    func startAccessory(_ type: AccessoryType) {
+        guard let config = config else { return }
+        switch type {
+        case .eyeDrops:
+            if config.eyeDropsCount > 0 {
+                config.eyeDropsStartDate = Date()
+                config.eyeDropsCount -= 1
+            }
+        case .cleaner:
+            if config.cleanerCount > 0 {
+                config.cleanerStartDate = Date()
+                config.cleanerCount -= 1
+            }
+        case .lensCase:
+            if config.caseCount > 0 {
+                config.caseStartDate = Date()
+                config.caseCount -= 1
+            }
+        }
+        save()
+    }
+    
+    func getAccessoryStatus(for type: AccessoryType) -> (daysLeft: Int, progress: Double, isActive: Bool, duration: Int) {
+        guard let config = config else { return (0, 0.0, false, 0) }
+        
+        let startDate: Date?
+        let duration: Int
+        
+        switch type {
+        case .eyeDrops:
+            startDate = config.eyeDropsStartDate
+            duration = Int(config.eyeDropsDuration)
+        case .cleaner:
+            startDate = config.cleanerStartDate
+            duration = Int(config.cleanerDuration)
+        case .lensCase:
+            startDate = config.caseStartDate
+            duration = Int(config.caseDuration)
+        }
+        
+        guard let start = startDate, duration > 0 else {
+            return (0, 0.0, false, duration)
+        }
+        
+        let calendar = Calendar.current
+        let startOfCurrent = calendar.startOfDay(for: start)
+        let startOfToday = calendar.startOfDay(for: Date())
+        let daysElapsed = calendar.dateComponents([.day], from: startOfCurrent, to: startOfToday).day ?? 0
+        
+        let daysLeft = max(0, duration - daysElapsed)
+        let progress = 1.0 - (Double(daysElapsed) / Double(duration))
+        let isActive = daysLeft > 0
+        
+        return (daysLeft, progress, isActive, duration)
+    }
+    
+    func getAccessoryCount(for type: AccessoryType) -> Int {
+        guard let config = config else { return 0 }
+        switch type {
+        case .eyeDrops: return Int(config.eyeDropsCount)
+        case .cleaner: return Int(config.cleanerCount)
+        case .lensCase: return Int(config.caseCount)
+        }
+    }
+    
+    func addAccessory(_ type: AccessoryType, count: Int) {
+        guard let config = config else { return }
+        switch type {
+        case .eyeDrops: config.eyeDropsCount += Int16(count)
+        case .cleaner: config.cleanerCount += Int16(count)
+        case .lensCase: config.caseCount += Int16(count)
+        }
+        save()
+    }
+    
     // MARK: - Prescription Helpers
     
     func getPrescriptionLeft() -> EyePrescription {
@@ -191,6 +285,7 @@ class LensManager: ObservableObject {
         do {
             try viewContext.save()
             fetchInventory()
+            WidgetCenter.shared.reloadAllTimelines()
             // scheduleNotifications()
         } catch {
             print("Failed to save context: \(error)")

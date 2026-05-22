@@ -1,0 +1,83 @@
+key,en,it,ro,ru
+"",,,,
+%@ (%d left),%1$@ (%2$d left),,%1$@ (%2$d left),%1$@ (%2$d left)
+%@ (%lld left),%@ (%lld left),%1$@ (%2$lld rimaste),%@ (%lld left),%@ (%lld left)
+%d,,,,
+%d Item(s),,,,
+%d Pair(s),,,,
+%lld,,,,
+%lld Days,,,,
+%lld days left,,,,
+%lld in inventory,,,,
+%lld Pair(s),%lld Pair(s),%lld Paio/a,%lld Pair(s),%lld Pair(s)
+%lld Pairs Remaining,%lld Pairs Remaining,%lld Paia Rimaste,%lld Pairs Remaining,%lld Pairs Remaining
+Accessories,,,,
+Accessory Durations (Days),,,,
+ADD,ADD,ADD,ADD,ADD
+Add Contact Lenses,Add Contact Lenses,Aggiungi Lenti a Contatto,Add Contact Lenses,Add Contact Lenses
+Add Inventory,Add Inventory,Aggiungi Inventario,Add Inventory,Add Inventory
+Add Pairs,Add Pairs,Aggiungi Paia,Add Pairs,Add Pairs
+Are you absolutely sure?,Are you absolutely sure?,Sei assolutamente sicuro?,Are you absolutely sure?,Are you absolutely sure?
+Astigmatism,Astigmatism,Astigmatismo,Astigmatism,Astigmatism
+Auto-Renew Pairs,Auto-Renew Pairs,Rinnovo Automatico,Auto-Renew Pairs,Auto-Renew Pairs
+AXIS,AXIS,ASSE,AXIS,AXIS
+BC,BC,CB,BC,BC
+Bi-Weekly,Bi-Weekly,Quindicinale,Bi-Weekly,Bi-Weekly
+Cancel,Cancel,Annulla,Cancel,Cancel
+Choose Lens Type to Renew,Choose Lens Type to Renew,Scegli il tipo di lente da rinnovare,Choose Lens Type to Renew,Choose Lens Type to Renew
+Close,Close,Chiudi,Close,Close
+Contact Case,,,,
+Custom,Custom,Personalizzato,Custom,Custom
+CYL,CYL,CIL,CYL,CYL
+Daily,Daily,Giornaliera,Daily,Daily
+Danger Zone,Danger Zone,Zona di Pericolo,Danger Zone,Danger Zone
+Days Left,Days Left,Giorni Rimasti,Days Left,Days Left
+Details,Details,Dettagli,Details,Details
+DIA,DIA,DIA,DIA,DIA
+Done,Done,Fatto,Done,Done
+Edit,Edit,Modifica,Edit,Edit
+Enter lens type,Enter lens type,Inserisci il tipo di lente,Enter lens type,Enter lens type
+Eye Drops,,,,
+Health,Health,Salute,Health,Health
+Home,Home,Home,Home,Home
+Inventory,Inventory,Inventario,Inventory,Inventory
+Item Info,,,,
+L (OS),L (OS),S (OS),L (OS),L (OS)
+Lens Cleaner,,,,
+Lens Type,Lens Type,Tipo di Lente,Lens Type,Lens Type
+Lenses,,,,
+Loading...,Loading...,Caricamento in corso...,Loading...,Loading...
+Monthly,Monthly,Mensile,Monthly,Monthly
+Multifocal,Multifocal,Multifocale,Multifocal,Multifocal
+Next Checkup,Next Checkup,Prossimo Controllo,Next Checkup,Next Checkup
+"No Active
+Lenses","No Active
+Lenses","Nessuna Lente
+Attiva","No Active
+Lenses","No Active
+Lenses"
+No inventory tracked yet.,No inventory tracked yet.,Nessun inventario tracciato.,No inventory tracked yet.,No inventory tracked yet.
+Not Set,Not Set,Non Impostato,Not Set,Not Set
+Nuke Database,Nuke Database,Svuota Database,Nuke Database,Nuke Database
+Nuke It All,Nuke It All,Cancella Tutto,Nuke It All,Nuke It All
+Preferences,Preferences,Preferenze,Preferences,Preferences
+Prescription,Prescription,Prescrizione,Prescription,Prescription
+Quantity,,,,
+R (OD),R (OD),D (OD),R (OD),R (OD)
+Replace,Replace,Sostituisci,Replace,Replace
+Replace Lenses,Replace Lenses,Sostituisci Lenti,Replace Lenses,Replace Lenses
+Replace Lenses Early?,Replace Lenses Early?,Sostituire le lenti prima?,Replace Lenses Early?,Replace Lenses Early?
+Reset Current Pair Start Date,Reset Current Pair Start Date,Ripristina Data di Inizio,Reset Current Pair Start Date,Reset Current Pair Start Date
+Save,Save,Salva,Save,Save
+Select %@,,,,
+Settings,Settings,Impostazioni,Settings,Settings
+SPH,SPH,SFE,SPH,SPH
+Start,,,,
+Start Lenses,Start Lenses,Inizia Lenti,Start Lenses,Start Lenses
+Theme,Theme,Tema,Theme,Theme
+"This will delete all your settings, prescription data, and inventory. This cannot be undone.","This will delete all your settings, prescription data, and inventory. This cannot be undone.","Questo eliminerà tutte le tue impostazioni, dati di prescrizione e inventario. L'operazione non è reversibile.","This will delete all your settings, prescription data, and inventory. This cannot be undone.","This will delete all your settings, prescription data, and inventory. This cannot be undone."
+Type,Type,Tipo,Type,Type
+Unknown,Unknown,Sconosciuto,Unknown,Unknown
+Warning: Pairs will be deducted automatically without confirmation when the duration expires.,Warning: Pairs will be deducted automatically without confirmation when the duration expires.,Attenzione: le lenti verranno scalate automaticamente senza conferma allo scadere del tempo.,Warning: Pairs will be deducted automatically without confirmation when the duration expires.,Warning: Pairs will be deducted automatically without confirmation when the duration expires.
+What to Add,,,,
+Your current pair is still good. Are you sure you want to replace it now?,Your current pair is still good. Are you sure you want to replace it now?,Il tuo paio attuale è ancora buono. Sei sicuro di volerlo sostituire ora?,Your current pair is still good. Are you sure you want to replace it now?,Your current pair is still good. Are you sure you want to replace it now?

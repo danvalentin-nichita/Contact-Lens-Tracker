@@ -39,9 +39,34 @@ struct PersistenceController {
 
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "ContactLensTracker")
+        
         if inMemory {
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+            container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: URL(fileURLWithPath: "/dev/null"))]
+        } else {
+            let appGroupID = "group.io.github.danvalentin-nichita.ContactLensTracker"
+            guard let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
+                fatalError("Could not find App Group container with ID: \(appGroupID)")
+            }
+            let storeURL = appGroupURL.appendingPathComponent("ContactLensTracker.sqlite")
+            
+            let description = NSPersistentStoreDescription(url: storeURL)
+            container.persistentStoreDescriptions = [description]
+            
+            let defaultDirectoryURL = NSPersistentContainer.defaultDirectoryURL()
+            let oldStoreURL = defaultDirectoryURL.appendingPathComponent("ContactLensTracker.sqlite")
+            
+            if FileManager.default.fileExists(atPath: oldStoreURL.path) && !FileManager.default.fileExists(atPath: storeURL.path) {
+                print("Migrating store to App Group...")
+                let coordinator = NSPersistentStoreCoordinator(managedObjectModel: container.managedObjectModel)
+                do {
+                    try coordinator.replacePersistentStore(at: storeURL, destinationOptions: nil, withPersistentStoreFrom: oldStoreURL, sourceOptions: nil, ofType: NSSQLiteStoreType)
+                    print("Successfully migrated store.")
+                } catch {
+                    print("Error migrating store: \(error)")
+                }
+            }
         }
+        
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
