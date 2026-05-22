@@ -2,6 +2,7 @@ import SwiftUI
 import CoreData
 import UserNotifications
 import Combine
+import WidgetKit
 
 @main
 struct ContactLensTrackerApp: App {
@@ -277,6 +278,7 @@ class LensManager: ObservableObject {
         do {
             try viewContext.save()
             fetchInventory()
+            WidgetCenter.shared.reloadAllTimelines()
             // scheduleNotifications()
         } catch {
             print("Failed to save context: \(error)")

@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		37E21D862F9419B10076C70D /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E21D4D2F9418D40076C70D /* WidgetKit.framework */; };
+		37E21D872F9419B10076C70D /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E21D4F2F9418D50076C70D /* SwiftUI.framework */; };
+		37E21D942F9419B20076C70D /* ContactLensWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 37E21D852F9419B10076C70D /* ContactLensWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EDC05797259F0E43FCE527B0 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF3D58A7358CC4720F8C85F /* AppTheme.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		370FF1862F4A167400C3B2C6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,12 +28,38 @@
 			remoteGlobalIDString = 370FF1702F4A167200C3B2C6;
 			remoteInfo = ContactLensTracker;
 		};
+		37E21D922F9419B20076C70D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 370FF1692F4A167200C3B2C6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37E21D842F9419B10076C70D;
+			remoteInfo = ContactLensWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		37E21D602F9418D90076C70D /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				37E21D942F9419B20076C70D /* ContactLensWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		370FF1712F4A167200C3B2C6 /* ContactLensTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactLensTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		370FF1852F4A167400C3B2C6 /* ContactLensTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactLensTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		370FF18F2F4A167400C3B2C6 /* ContactLensTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactLensTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		37E21D4D2F9418D40076C70D /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		37E21D4F2F9418D50076C70D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		37E21D852F9419B10076C70D /* ContactLensWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ContactLensWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		37E21D992F9419C50076C70D /* ContactLensWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ContactLensWidgetExtension.entitlements; sourceTree = "<group>"; };
+		FEF3D58A7358CC4720F8C85F /* AppTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppTheme.swift; path = ContactLensTracker/AppTheme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -67,6 +100,20 @@
 			);
 			target = 370FF18E2F4A167400C3B2C6 /* ContactLensTrackerUITests */;
 		};
+		37E21D982F9419B20076C70D /* Exceptions for "ContactLensWidget" folder in "ContactLensWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 37E21D842F9419B10076C70D /* ContactLensWidgetExtension */;
+		};
+		37E21D9B2F941A000076C70D /* Exceptions for "ContactLensTracker" folder in "ContactLensWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContactLensTracker.xcdatamodeld,
+			);
+			target = 37E21D842F9419B10076C70D /* ContactLensWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -74,6 +121,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				370FF1972F4A167400C3B2C6 /* Exceptions for "ContactLensTracker" folder in "ContactLensTracker" target */,
+				37E21D9B2F941A000076C70D /* Exceptions for "ContactLensTracker" folder in "ContactLensWidgetExtension" target */,
 			);
 			path = ContactLensTracker;
 			sourceTree = "<group>";
@@ -95,6 +143,14 @@
 				37A3F4932F50D08F003A317E /* Exceptions for "icon_svg_layers" folder in "ContactLensTrackerUITests" target */,
 			);
 			path = icon_svg_layers;
+			sourceTree = "<group>";
+		};
+		37E21D882F9419B10076C70D /* ContactLensWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				37E21D982F9419B20076C70D /* Exceptions for "ContactLensWidget" folder in "ContactLensWidgetExtension" target */,
+			);
+			path = ContactLensWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -121,17 +177,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37E21D822F9419B10076C70D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37E21D872F9419B10076C70D /* SwiftUI.framework in Frameworks */,
+				37E21D862F9419B10076C70D /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		370FF1682F4A167200C3B2C6 = {
 			isa = PBXGroup;
 			children = (
+				37E21D992F9419C50076C70D /* ContactLensWidgetExtension.entitlements */,
 				370FF1732F4A167200C3B2C6 /* ContactLensTracker */,
 				370FF1882F4A167400C3B2C6 /* ContactLensTrackerTests */,
 				370FF1922F4A167400C3B2C6 /* ContactLensTrackerUITests */,
+				37E21D882F9419B10076C70D /* ContactLensWidget */,
+				37E21D4C2F9418D40076C70D /* Frameworks */,
 				370FF1722F4A167200C3B2C6 /* Products */,
 				37A3F4882F50D08F003A317E /* icon_svg_layers */,
+				FEF3D58A7358CC4720F8C85F /* AppTheme.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -141,8 +210,18 @@
 				370FF1712F4A167200C3B2C6 /* ContactLensTracker.app */,
 				370FF1852F4A167400C3B2C6 /* ContactLensTrackerTests.xctest */,
 				370FF18F2F4A167400C3B2C6 /* ContactLensTrackerUITests.xctest */,
+				37E21D852F9419B10076C70D /* ContactLensWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		37E21D4C2F9418D40076C70D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				37E21D4D2F9418D40076C70D /* WidgetKit.framework */,
+				37E21D4F2F9418D50076C70D /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -155,17 +234,17 @@
 				370FF16D2F4A167200C3B2C6 /* Sources */,
 				370FF16E2F4A167200C3B2C6 /* Frameworks */,
 				370FF16F2F4A167200C3B2C6 /* Resources */,
+				37E21D602F9418D90076C70D /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				37E21D932F9419B20076C70D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				370FF1732F4A167200C3B2C6 /* ContactLensTracker */,
 			);
 			name = ContactLensTracker;
-			packageProductDependencies = (
-			);
 			productName = ContactLensTracker;
 			productReference = 370FF1712F4A167200C3B2C6 /* ContactLensTracker.app */;
 			productType = "com.apple.product-type.application";
@@ -187,8 +266,6 @@
 				370FF1882F4A167400C3B2C6 /* ContactLensTrackerTests */,
 			);
 			name = ContactLensTrackerTests;
-			packageProductDependencies = (
-			);
 			productName = ContactLensTrackerTests;
 			productReference = 370FF1852F4A167400C3B2C6 /* ContactLensTrackerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -211,11 +288,29 @@
 				37A3F4882F50D08F003A317E /* icon_svg_layers */,
 			);
 			name = ContactLensTrackerUITests;
-			packageProductDependencies = (
-			);
 			productName = ContactLensTrackerUITests;
 			productReference = 370FF18F2F4A167400C3B2C6 /* ContactLensTrackerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		37E21D842F9419B10076C70D /* ContactLensWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37E21D952F9419B20076C70D /* Build configuration list for PBXNativeTarget "ContactLensWidgetExtension" */;
+			buildPhases = (
+				37E21D812F9419B10076C70D /* Sources */,
+				37E21D822F9419B10076C70D /* Frameworks */,
+				37E21D832F9419B10076C70D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				37E21D882F9419B10076C70D /* ContactLensWidget */,
+			);
+			name = ContactLensWidgetExtension;
+			productName = ContactLensWidgetExtension;
+			productReference = 37E21D852F9419B10076C70D /* ContactLensWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -224,7 +319,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2620;
+				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					370FF1702F4A167200C3B2C6 = {
@@ -238,6 +333,9 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = 370FF1702F4A167200C3B2C6;
 					};
+					37E21D842F9419B10076C70D = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
 				};
 			};
 			buildConfigurationList = 370FF16C2F4A167200C3B2C6 /* Build configuration list for PBXProject "ContactLensTracker" */;
@@ -249,6 +347,9 @@
 			);
 			mainGroup = 370FF1682F4A167200C3B2C6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				37BCCA6F2FBCDE5B007D2E53 /* XCRemoteSwiftPackageReference "SwiftLint" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 370FF1722F4A167200C3B2C6 /* Products */;
 			projectDirPath = "";
@@ -257,6 +358,7 @@
 				370FF1702F4A167200C3B2C6 /* ContactLensTracker */,
 				370FF1842F4A167400C3B2C6 /* ContactLensTrackerTests */,
 				370FF18E2F4A167400C3B2C6 /* ContactLensTrackerUITests */,
+				37E21D842F9419B10076C70D /* ContactLensWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -277,6 +379,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		370FF18D2F4A167400C3B2C6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37E21D832F9419B10076C70D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -307,6 +416,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37E21D812F9419B10076C70D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDC05797259F0E43FCE527B0 /* AppTheme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -319,6 +436,11 @@
 			isa = PBXTargetDependency;
 			target = 370FF1702F4A167200C3B2C6 /* ContactLensTracker */;
 			targetProxy = 370FF1902F4A167400C3B2C6 /* PBXContainerItemProxy */;
+		};
+		37E21D932F9419B20076C70D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37E21D842F9419B10076C70D /* ContactLensWidgetExtension */;
+			targetProxy = 37E21D922F9419B20076C70D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -602,6 +724,72 @@
 			};
 			name = Release;
 		};
+		37E21D962F9419B20076C70D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ContactLensWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MD8W99D725;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ContactLensWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ContactLensWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.danvalentin-nichita.ContactLensTracker.ContactLensWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		37E21D972F9419B20076C70D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ContactLensWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MD8W99D725;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ContactLensWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ContactLensWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.danvalentin-nichita.ContactLensTracker.ContactLensWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -641,7 +829,27 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		37E21D952F9419B20076C70D /* Build configuration list for PBXNativeTarget "ContactLensWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37E21D962F9419B20076C70D /* Debug */,
+				37E21D972F9419B20076C70D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		37BCCA6F2FBCDE5B007D2E53 /* XCRemoteSwiftPackageReference "SwiftLint" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/SwiftLint.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.63.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 370FF1692F4A167200C3B2C6 /* Project object */;
 }
