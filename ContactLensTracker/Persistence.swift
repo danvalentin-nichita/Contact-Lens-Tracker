@@ -40,18 +40,18 @@ struct PersistenceController {
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "ContactLensTracker")
         
-        let appGroupID = "group.io.github.danvalentin-nichita.ContactLensTracker"
-        guard let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
-            fatalError("Could not find App Group container with ID: \(appGroupID)")
-        }
-        let storeURL = appGroupURL.appendingPathComponent("ContactLensTracker.sqlite")
-        
-        let description = NSPersistentStoreDescription(url: storeURL)
-        container.persistentStoreDescriptions = [description]
-        
         if inMemory {
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+            container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: URL(fileURLWithPath: "/dev/null"))]
         } else {
+            let appGroupID = "group.io.github.danvalentin-nichita.ContactLensTracker"
+            guard let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
+                fatalError("Could not find App Group container with ID: \(appGroupID)")
+            }
+            let storeURL = appGroupURL.appendingPathComponent("ContactLensTracker.sqlite")
+            
+            let description = NSPersistentStoreDescription(url: storeURL)
+            container.persistentStoreDescriptions = [description]
+            
             let defaultDirectoryURL = NSPersistentContainer.defaultDirectoryURL()
             let oldStoreURL = defaultDirectoryURL.appendingPathComponent("ContactLensTracker.sqlite")
             

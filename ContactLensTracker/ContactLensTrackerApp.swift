@@ -163,14 +163,20 @@ class LensManager: ObservableObject {
         guard let config = config else { return }
         switch type {
         case .eyeDrops:
-            config.eyeDropsStartDate = Date()
-            if config.eyeDropsCount > 0 { config.eyeDropsCount -= 1 }
+            if config.eyeDropsCount > 0 {
+                config.eyeDropsStartDate = Date()
+                config.eyeDropsCount -= 1
+            }
         case .cleaner:
-            config.cleanerStartDate = Date()
-            if config.cleanerCount > 0 { config.cleanerCount -= 1 }
+            if config.cleanerCount > 0 {
+                config.cleanerStartDate = Date()
+                config.cleanerCount -= 1
+            }
         case .lensCase:
-            config.caseStartDate = Date()
-            if config.caseCount > 0 { config.caseCount -= 1 }
+            if config.caseCount > 0 {
+                config.caseStartDate = Date()
+                config.caseCount -= 1
+            }
         }
         save()
     }
@@ -204,8 +210,9 @@ class LensManager: ObservableObject {
         
         let daysLeft = max(0, duration - daysElapsed)
         let progress = 1.0 - (Double(daysElapsed) / Double(duration))
+        let isActive = daysLeft > 0
         
-        return (daysLeft, progress, true, duration)
+        return (daysLeft, progress, isActive, duration)
     }
     
     func getAccessoryCount(for type: AccessoryType) -> Int {

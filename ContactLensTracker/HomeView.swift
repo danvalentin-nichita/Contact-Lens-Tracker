@@ -36,7 +36,7 @@ struct HomeView: View {
                                 }
                                 
                                 VStack(spacing: 20) {
-                                    Text("\(totalPairs) Pairs Remaining")
+                                    Text(String(format: NSLocalizedString("pairs_remaining", comment: ""), totalPairs))
                                         .font(.headline)
                                     
                                     replaceButton(isActive: isActive, daysLeft: daysLeft, hasPairs: totalPairs > 0)
@@ -55,7 +55,7 @@ struct HomeView: View {
                                     inactiveCircle()
                                 }
                                 
-                                Text("\(totalPairs) Pairs Remaining")
+                                Text(String(format: NSLocalizedString("pairs_remaining", comment: ""), totalPairs))
                                     .font(.headline)
                                 
                                 replaceButton(isActive: isActive, daysLeft: daysLeft, hasPairs: totalPairs > 0)
@@ -179,7 +179,7 @@ struct HomeView: View {
                     handleReplace()
                 }
             }) {
-                Text(isActive ? "Replace Lenses" : "Start Lenses")
+                Text(isActive ? LocalizedStringKey("replace_lenses") : LocalizedStringKey("start_lenses"))
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()
@@ -192,7 +192,7 @@ struct HomeView: View {
             Button(action: {
                 showingAddSheet = true
             }) {
-                Text("Add Contact Lenses")
+                Text(LocalizedStringKey("add_contact_lenses"))
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()
@@ -266,9 +266,9 @@ struct AccessoryCard: View {
                 .frame(width: 30)
             
             VStack(alignment: .leading, spacing: 2) {
-                Text(type.rawValue)
+                Text(LocalizedStringKey(type.rawValue))
                     .font(.headline)
-                Text("\(inventoryCount) in inventory")
+                Text(String(format: NSLocalizedString("in_inventory", comment: ""), inventoryCount))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -278,21 +278,21 @@ struct AccessoryCard: View {
             if status.duration > 0 {
                 if status.isActive {
                     HStack(spacing: 10) {
-                        Text("\(status.daysLeft) days left")
+                        Text(String(format: NSLocalizedString("days_left", comment: ""), status.daysLeft))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                         
                         smallProgressCircle(progress: status.progress)
                     }
                 } else {
-                    Button("Start") {
+                    Button(LocalizedStringKey("start_accessory")) {
                         lensManager.startAccessory(type)
                     }
                     .font(.subheadline)
                     .buttonStyle(.bordered)
                 }
             } else {
-                Text("Not Set")
+                Text(LocalizedStringKey("not_set"))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
