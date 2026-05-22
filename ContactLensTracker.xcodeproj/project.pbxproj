@@ -66,6 +66,7 @@
 		370FF1972F4A167400C3B2C6 /* Exceptions for "ContactLensTracker" folder in "ContactLensTracker" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Assets.xcassets,
 				Info.plist,
 			);
 			target = 370FF1702F4A167200C3B2C6 /* ContactLensTracker */;
@@ -110,6 +111,7 @@
 		37E21D9B2F941A000076C70D /* Exceptions for "ContactLensTracker" folder in "ContactLensWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Assets.xcassets,
 				ContactLensTracker.xcdatamodeld,
 			);
 			target = 37E21D842F9419B10076C70D /* ContactLensWidgetExtension */;

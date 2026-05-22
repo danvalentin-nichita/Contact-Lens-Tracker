@@ -1,8 +1,9 @@
 {
+  "color-space-for-untagged-svg-colors" : "display-p3",
   "fill" : {
     "linear-gradient" : [
-      "display-p3:0.32886,0.67773,0.39575,1.00000",
-      "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+      "extended-srgb:0.00000,0.53333,1.00000,1.00000",
+      "display-p3:0.32886,0.67773,0.39575,1.00000"
     ],
     "orientation" : {
       "start" : {
@@ -217,6 +218,9 @@
     }
   ],
   "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
     "squares" : [
       "iOS"
     ]

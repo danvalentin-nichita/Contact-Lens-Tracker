@@ -25,9 +25,16 @@ class LensManager: ObservableObject {
     private let viewContext: NSManagedObjectContext
     @Published var config: LensConfig?
     @Published var inventory: [LensInventory] = []
+    @Published var isSubscribed: Bool {
+        didSet {
+            UserDefaults(suiteName: "group.io.github.danvalentin-nichita.ContactLensTracker")?.set(isSubscribed, forKey: "isSubscribed")
+            WidgetCenter.shared.reloadAllTimelines()
+        }
+    }
 
     init(context: NSManagedObjectContext) {
         self.viewContext = context
+        self.isSubscribed = UserDefaults(suiteName: "group.io.github.danvalentin-nichita.ContactLensTracker")?.bool(forKey: "isSubscribed") ?? false
         fetchConfig()
         fetchInventory()
         checkAutoRenew()

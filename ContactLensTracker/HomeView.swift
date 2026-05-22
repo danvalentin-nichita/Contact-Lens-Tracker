@@ -8,6 +8,7 @@ struct HomeView: View {
     @State private var showingInventoryChooser = false
     @State private var showingPrescription = false
     @State private var showingAddSheet = false
+    @State private var showingPaywall = false
     
     var body: some View {
         NavigationView {
@@ -93,6 +94,10 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingAddSheet) {
                 AddInventoryView()
+                    .environmentObject(lensManager)
+            }
+            .sheet(isPresented: $showingPaywall) {
+                SubscriptionView()
                     .environmentObject(lensManager)
             }
             .navigationBarItems(trailing: Button(action: {
@@ -234,12 +239,60 @@ struct HomeView: View {
     
     @ViewBuilder
     func accessoriesDashboard() -> some View {
-        VStack(spacing: 12) {
-            AccessoryCard(type: .eyeDrops)
-            AccessoryCard(type: .cleaner)
-            AccessoryCard(type: .lensCase)
+        if lensManager.isSubscribed {
+            VStack(spacing: 12) {
+                AccessoryCard(type: .eyeDrops)
+                AccessoryCard(type: .cleaner)
+                AccessoryCard(type: .lensCase)
+            }
+            .padding(.top, 10)
+        } else {
+            ZStack {
+                VStack(spacing: 12) {
+                    AccessoryCard(type: .eyeDrops)
+                    AccessoryCard(type: .cleaner)
+                    AccessoryCard(type: .lensCase)
+                }
+                .blur(radius: 3)
+                .disabled(true)
+                
+                Button(action: { showingPaywall = true }) {
+                    VStack(spacing: 10) {
+                        Image(systemName: "lock.fill")
+                            .font(.title2)
+                            .foregroundColor(.orange)
+                            .shadow(radius: 1)
+                        
+                        Text("Accessories Tracking")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        Text("Track your drops, cases, and cleaners with Premium.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+                        
+                        Text("Tap to Unlock")
+                            .font(.caption2.bold())
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 6)
+                            .background(
+                                LinearGradient(colors: [.orange, .pink], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .cornerRadius(8)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(UIColor.secondarySystemBackground).opacity(0.75))
+                    .cornerRadius(12)
+                    .padding(.horizontal)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.top, 10)
         }
-        .padding(.top, 10)
     }
 }
 

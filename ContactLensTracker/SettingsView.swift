@@ -9,6 +9,7 @@ struct SettingsView: View {
     @State private var selectedTheme: AppTheme = .defaultBlue
     @State private var showingAutoRenewWarning = false
     @State private var showingNukeWarning = false
+    @State private var showingPaywall = false
     
     @State private var eyeDropsDuration: Int16 = 0
     @State private var cleanerDuration: Int16 = 0
@@ -17,6 +18,46 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
+                Section(header: Text("Subscription Sandbox (Testing)")) {
+                    Toggle("Pro Active 👑", isOn: Binding(
+                        get: { lensManager.isSubscribed },
+                        set: { newValue in
+                            lensManager.isSubscribed = newValue
+                            if !newValue {
+                                if let config = lensManager.config {
+                                    config.theme = AppTheme.defaultBlue.rawValue
+                                    lensManager.save()
+                                    selectedTheme = .defaultBlue
+                                }
+                            }
+                        }
+                    ))
+                }
+
+                Section(header: Text("Subscription")) {
+                    if lensManager.isSubscribed {
+                        HStack {
+                            Label("Premium Status", systemImage: "crown.fill")
+                                .foregroundColor(.yellow)
+                            Spacer()
+                            Text("Active Pro")
+                                .bold()
+                                .foregroundColor(.secondary)
+                        }
+                    } else {
+                        Button(action: { showingPaywall = true }) {
+                            HStack {
+                                Label("Upgrade to Premium", systemImage: "sparkles")
+                                    .foregroundColor(.blue)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                }
+
                 Section(header: Text("Health")) {
                     DatePicker("Next Checkup", selection: $nextCheckupDate, displayedComponents: .date)
                         .onChange(of: nextCheckupDate) { _ in saveSettings() }
@@ -56,6 +97,18 @@ struct SettingsView: View {
                                                     .stroke(selectedTheme == theme ? Color.blue : Color.clear, lineWidth: 3)
                                                     .padding(-4)
                                             )
+                                            .overlay(
+                                                Group {
+                                                    if theme != .defaultBlue && !lensManager.isSubscribed {
+                                                        Image(systemName: "lock.fill")
+                                                            .font(.system(size: 9))
+                                                            .foregroundColor(.white)
+                                                            .padding(4)
+                                                            .background(Circle().fill(Color.black.opacity(0.6)))
+                                                            .offset(x: 14, y: 14)
+                                                    }
+                                                }
+                                            )
                                         
                                         Text(theme.rawValue)
                                             .font(.caption2)
@@ -64,9 +117,13 @@ struct SettingsView: View {
                                     }
                                     .contentShape(Rectangle())
                                     .onTapGesture {
-                                        withAnimation(.easeInOut(duration: 0.2)) {
-                                            selectedTheme = theme
-                                            saveSettings()
+                                        if theme != .defaultBlue && !lensManager.isSubscribed {
+                                            showingPaywall = true
+                                        } else {
+                                            withAnimation(.easeInOut(duration: 0.2)) {
+                                                selectedTheme = theme
+                                                saveSettings()
+                                            }
                                         }
                                     }
                                 }
@@ -134,6 +191,10 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .sheet(isPresented: $showingPaywall) {
+                SubscriptionView()
+                    .environmentObject(lensManager)
+            }
             .onAppear {
                 loadSettings()
             }
@@ -145,9 +206,15 @@ struct SettingsView: View {
         if let config = lensManager.config {
             isAutoRenewEnabled = config.isAutoRenewEnabled
             nextCheckupDate = config.nextCheckupDate ?? Date()
-            if let themeStr = config.theme, let theme = AppTheme(rawValue: themeStr) {
-                selectedTheme = theme
+            
+            let themeStr = config.theme ?? "Default Blue"
+            var theme = AppTheme(rawValue: themeStr) ?? .defaultBlue
+            if theme != .defaultBlue && !lensManager.isSubscribed {
+                theme = .defaultBlue
+                config.theme = AppTheme.defaultBlue.rawValue
+                lensManager.save()
             }
+            selectedTheme = theme
             showingAutoRenewWarning = isAutoRenewEnabled
             
             eyeDropsDuration = config.eyeDropsDuration

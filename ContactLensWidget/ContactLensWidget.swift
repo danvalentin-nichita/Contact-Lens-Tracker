@@ -125,15 +125,97 @@ struct ContactLensWidgetEntryView : View {
     @Environment(\.widgetFamily) var family
 
     var body: some View {
+        let isSubscribed = UserDefaults(suiteName: "group.io.github.danvalentin-nichita.ContactLensTracker")?.bool(forKey: "isSubscribed") ?? false
+        
+        if !isSubscribed {
+            LockedWidgetView(family: family)
+        } else {
+            switch family {
+            case .accessoryRectangular:
+                LockscreenWidgetView(data: entry.data)
+            case .systemSmall:
+                SmallWidgetView(data: entry.data)
+            case .systemMedium:
+                MediumWidgetView(data: entry.data)
+            default:
+                SmallWidgetView(data: entry.data)
+            }
+        }
+    }
+}
+
+struct LockedWidgetView: View {
+    let family: WidgetFamily
+    
+    var body: some View {
         switch family {
         case .accessoryRectangular:
-            LockscreenWidgetView(data: entry.data)
+            HStack(spacing: 4) {
+                Image(systemName: "lock.fill")
+                Text("Pro Required")
+                    .font(.caption)
+                    .bold()
+            }
+            .widgetAccentable()
         case .systemSmall:
-            SmallWidgetView(data: entry.data)
+            VStack(spacing: 8) {
+                Image(systemName: "lock.fill")
+                    .font(.title3)
+                    .foregroundColor(.orange)
+                    .padding(8)
+                    .background(Circle().fill(Color.orange.opacity(0.15)))
+                
+                Text("Pro Required")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundColor(.primary)
+                
+                Text("Unlock widgets & themes.")
+                    .font(.system(size: 9))
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+            }
+            .padding(10)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                LinearGradient(
+                    colors: [Color(UIColor.systemBackground), Color(UIColor.secondarySystemBackground)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
         case .systemMedium:
-            MediumWidgetView(data: entry.data)
+            HStack(spacing: 16) {
+                VStack(spacing: 8) {
+                    Image(systemName: "lock.fill")
+                        .font(.title2)
+                        .foregroundColor(.orange)
+                        .padding(12)
+                        .background(Circle().fill(Color.orange.opacity(0.15)))
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Unlock Lens Tracker Pro")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(.primary)
+                    
+                    Text("Access home screen widgets, accessory tracking, and 10+ custom gradient themes.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(3)
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                LinearGradient(
+                    colors: [Color(UIColor.systemBackground), Color(UIColor.secondarySystemBackground)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
         default:
-            SmallWidgetView(data: entry.data)
+            EmptyView()
         }
     }
 }

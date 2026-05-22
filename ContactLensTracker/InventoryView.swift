@@ -4,6 +4,7 @@ import CoreData
 struct InventoryView: View {
     @EnvironmentObject var lensManager: LensManager
     @State private var showingAddSheet = false
+    @State private var showingPaywall = false
     @State private var isEditing = false
     @State private var localEdits: [UUID: Int16] = [:]
     @State private var localAccessoryEdits: [LensManager.AccessoryType: Int16] = [:]
@@ -24,10 +25,33 @@ struct InventoryView: View {
                 }
                 
                 Section(header: Text("Accessories")) {
-                    if let config = lensManager.config {
-                        AccessoryRow(type: .eyeDrops, count: config.eyeDropsCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
-                        AccessoryRow(type: .cleaner, count: config.cleanerCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
-                        AccessoryRow(type: .lensCase, count: config.caseCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
+                    if lensManager.isSubscribed {
+                        if let config = lensManager.config {
+                            AccessoryRow(type: .eyeDrops, count: config.eyeDropsCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
+                            AccessoryRow(type: .cleaner, count: config.cleanerCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
+                            AccessoryRow(type: .lensCase, count: config.caseCount, isEditing: isEditing, localAccessoryEdits: $localAccessoryEdits)
+                        }
+                    } else {
+                        Button(action: { showingPaywall = true }) {
+                            HStack {
+                                Image(systemName: "lock.fill")
+                                    .foregroundColor(.orange)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Accessory Tracking (Pro)")
+                                        .font(.subheadline.bold())
+                                        .foregroundColor(.primary)
+                                    Text("Track Eye Drops, Cleaners, and Cases")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -65,6 +89,10 @@ struct InventoryView: View {
             .environment(\.editMode, .constant(isEditing ? .active : .inactive))
             .sheet(isPresented: $showingAddSheet) {
                 AddInventoryView()
+                    .environmentObject(lensManager)
+            }
+            .sheet(isPresented: $showingPaywall) {
+                SubscriptionView()
                     .environmentObject(lensManager)
             }
         }
@@ -187,6 +215,7 @@ struct InventoryRow: View {
 struct AddInventoryView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var lensManager: LensManager
+    @State private var showingPaywall = false
     
     let itemTypes = ["Contact Lenses", "Eye Drops", "Contact Case", "Lens Cleaner"]
     @State private var selectedItemType: String = "Contact Lenses"
@@ -201,9 +230,29 @@ struct AddInventoryView: View {
         NavigationView {
             Form {
                 Section(header: Text("Item Info")) {
-                    Picker("What to Add", selection: $selectedItemType) {
-                        ForEach(itemTypes, id: \.self) {
-                            Text($0)
+                    if #available(iOS 17.0, *) {
+                        Picker("What to Add", selection: $selectedItemType) {
+                            ForEach(itemTypes, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        .onChange(of: selectedItemType) { _, newValue in
+                            if newValue != "Contact Lenses" && !lensManager.isSubscribed {
+                                showingPaywall = true
+                                selectedItemType = "Contact Lenses"
+                            }
+                        }
+                    } else {
+                        Picker("What to Add", selection: $selectedItemType) {
+                            ForEach(itemTypes, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        .onChange(of: selectedItemType) { newValue in
+                            if newValue != "Contact Lenses" && !lensManager.isSubscribed {
+                                showingPaywall = true
+                                selectedItemType = "Contact Lenses"
+                            }
                         }
                     }
                     
@@ -258,6 +307,10 @@ struct AddInventoryView: View {
                 }
             )
         }
+        .sheet(isPresented: $showingPaywall) {
+            SubscriptionView()
+                .environmentObject(lensManager)
+        }
     }
     
     private func saveInventory() {
@@ -275,6 +328,7 @@ struct AddInventoryView: View {
             }
         } else {
             // Accessories
+            guard lensManager.isSubscribed else { return }
             if selectedItemType == "Eye Drops" {
                 lensManager.addAccessory(.eyeDrops, count: amountToAdd)
             } else if selectedItemType == "Lens Cleaner" {
